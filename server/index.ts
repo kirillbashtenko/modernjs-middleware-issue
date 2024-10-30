@@ -1,11 +1,10 @@
-import { Middleware, AfterRenderHook } from '@modern-js/runtime/server';
+import type { AfterMatchHook } from '@modern-js/runtime/server';
 
-export const middleware: Middleware = async (context, next) => {
-  console.log(context.response);
-  next();
-};
-
-export const afterRender: AfterRenderHook = (context, next) => {
-  context.template.appendBody('EdenX Server');
-  next();
+export const afterMatch: AfterMatchHook = async (context, next) => {
+  if (context.request.pathname === '/status') {
+    context.response.status(200);
+    context.response.raw(JSON.stringify({ status: 'ok' }));
+  } else {
+    next();
+  }
 };
